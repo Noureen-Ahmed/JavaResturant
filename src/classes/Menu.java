@@ -1,3 +1,5 @@
+package classes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,7 +7,11 @@ public class Menu {
     private List<FoodItem> items;
 
     public Menu() {
-        items = new ArrayList<>();
+        this.items = new ArrayList<>();
+    }
+
+    public Menu(List<FoodItem> items) {
+        this.items = items != null ? items : new ArrayList<>();
     }
 
     public void addItem(FoodItem item) {
@@ -13,12 +19,10 @@ public class Menu {
             throw new IllegalArgumentException("Food item cannot be null");
         }
 
-        // Prevent duplicate food items with the same ID
+        // Prevent duplicate food items with the same positive ID
         for (FoodItem existingItem : items) {
-            if (existingItem.getId() == item.getId()) {
-                throw new IllegalArgumentException(
-                        "A food item with this ID already exists"
-                );
+            if (existingItem != null && existingItem.getId() == item.getId() && item.getId() > 0) {
+                throw new IllegalArgumentException("A food item with this ID already exists");
             }
         }
 
@@ -30,12 +34,10 @@ public class Menu {
             throw new IllegalArgumentException("Item ID must be positive");
         }
 
-        boolean removed = items.removeIf(item -> item.getId() == itemId);
+        boolean removed = items.removeIf(item -> item != null && item.getId() == itemId);
 
         if (!removed) {
-            throw new IllegalArgumentException(
-                    "No food item found with ID: " + itemId
-            );
+            throw new IllegalArgumentException("No food item found with ID: " + itemId);
         }
     }
 
@@ -46,11 +48,17 @@ public class Menu {
         }
 
         for (FoodItem item : items) {
-            System.out.println(item);
+            if (item != null) {
+                System.out.println(item);
+            }
         }
     }
 
     public List<FoodItem> getItems() {
         return new ArrayList<>(items);
+    }
+
+    public void setItems(List<FoodItem> items) {
+        this.items = items != null ? items : new ArrayList<>();
     }
 }

@@ -10,24 +10,24 @@ public class DeliveryMan extends Employee {
 
     public DeliveryMan() {
         super();
-        this.setRole(Role.DELIVERY_MAN);
+        this.setRole(Role.DELIVERY);
         this.isAvailable = true;
     }
 
    
     public DeliveryMan(String name, String phone, String username, String password) {
-        super(name, phone, username, password, Role.DELIVERY_MAN);
+        super(name, phone, username, password, Role.DELIVERY);
         this.isAvailable = true;
     }
 
   
     public DeliveryMan(int id, String name, String phone, String username, String password) {
-        super(id, name, phone, username, password, Role.DELIVERY_MAN);
+        super(id, name, phone, username, password, Role.DELIVERY);
         this.isAvailable = true;
     }
 
     public DeliveryMan(int id, String name, String phone, String username, String password, boolean isAvailable) {
-        super(id, name, phone, username, password, Role.DELIVERY_MAN);
+        super(id, name, phone, username, password, Role.DELIVERY);
         this.isAvailable = isAvailable;
     }
 

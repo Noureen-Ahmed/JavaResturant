@@ -1,0 +1,7 @@
+--- ALL EMPLOYEES ---
+ID: 18  | Name: Youssef         | Role: MANAGER  | Username: admin   
+ID: 19  | Name: Filo Wael       | Role: CASHIER  | Username: filo    
+ID: 20  | Name: Sara Ali        | Role: CASHIER  | Username: sara    
+ID: 21  | Name: Nourine         | Role: CASHIER  | Username: nourine 
+ID: 22  | Name: Mohamed         | Role: DELIVERY | Username: mohamed 
+ID: 23  | Name: Mina Atef       | Role: DELIVERY | Username: mina    

@@ -9,5 +9,5 @@ package classes;
 public enum Role {
     MANAGER,
     CASHIER,
-    DELIVERY_MAN
+    DELIVERY
 }

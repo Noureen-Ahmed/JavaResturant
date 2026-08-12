@@ -140,7 +140,7 @@ public class EmployeeDAO {
             case CASHIER:
                 emp = new Cashier(id, name, phone, username, password);
                 break;
-            case DELIVERY_MAN:
+            case DELIVERY:
                 DeliveryMan deliveryMan = new DeliveryMan(id, name, phone, username, password);
                 deliveryMan.setAvailable(available); // Set availability ONLY for DeliveryMan
                 emp = deliveryMan;

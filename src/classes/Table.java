@@ -5,6 +5,7 @@ package classes;
  */
 public class Table {
     private int tableNumber;
+    private int capacity;
     private boolean available;
 
     // 1. Default Constructor
@@ -14,12 +15,13 @@ public class Table {
 
     // 2. Constructor برقم الطاولة فقط
     public Table(int tableNumber) {
-        this(tableNumber, true);
+        this(tableNumber, 4, true);
     }
 
     // 3. Constructor كامل
-    public Table(int tableNumber, boolean available) {
+    public Table(int tableNumber, int capacity, boolean available) {
         setTableNumber(tableNumber);
+        setCapacity(capacity);
         setAvailable(available);
     }
 
@@ -36,6 +38,17 @@ public class Table {
         this.tableNumber = tableNumber;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be positive.");
+        }
+        this.capacity = capacity;
+    }
+
     public boolean isAvailable() {
         return available;
     }
@@ -48,6 +61,7 @@ public class Table {
     public String toString() {
         return "Table{" +
                 "tableNumber=" + tableNumber +
+                ", capacity=" + capacity +
                 ", available=" + available +
                 '}';
     }

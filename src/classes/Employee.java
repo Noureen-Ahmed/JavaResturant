@@ -6,16 +6,15 @@ public abstract class Employee {
     private String phone;
     private String username;
     private String password;
-    private Role role; 
+    private Role role;
     private boolean loggedIn;
+    private double salary;
 
-    // 1. Empty Constructor
     public Employee() {
-   
+
         this.loggedIn = false;
     }
 
-    
     public Employee(String name, String phone, String username, String password, Role role) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Employee name cannot be null or empty.");
@@ -38,7 +37,6 @@ public abstract class Employee {
         this.loggedIn = false;
     }
 
-    
     public Employee(int id, String name, String phone, String username, String password, Role role) {
         this(name, phone, username, password, role);
         if (id <= 0) {
@@ -48,15 +46,15 @@ public abstract class Employee {
     }
 
     public boolean login(String username, String password) {
-    if (username != null && password != null 
-            && this.username != null && this.password != null // حماية إضافية
-            && this.username.equals(username) 
-            && this.password.equals(password)) {
-        this.loggedIn = true;
-        return true;
+        if (username != null && password != null
+                && this.username != null && this.password != null
+                && this.username.equals(username)
+                && this.password.equals(password)) {
+            this.loggedIn = true;
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
     public void logout() {
         this.loggedIn = false;
@@ -124,5 +122,16 @@ public abstract class Employee {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
         this.password = password;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        if (salary < 0) {
+            throw new IllegalArgumentException("Salary cannot be negative.");
+        }
+        this.salary = salary;
     }
 }

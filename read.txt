@@ -1,7 +1,6 @@
 --- ALL EMPLOYEES ---
-ID: 18  | Name: Youssef         | Role: MANAGER  | Username: admin   
-ID: 19  | Name: Filo Wael       | Role: CASHIER  | Username: filo    
-ID: 20  | Name: Sara Ali        | Role: CASHIER  | Username: sara    
-ID: 21  | Name: Nourine         | Role: CASHIER  | Username: nourine 
-ID: 22  | Name: Mohamed         | Role: DELIVERY | Username: mohamed 
-ID: 23  | Name: Mina Atef       | Role: DELIVERY | Username: mina    
+ID: 1  | Name: admin          | Role: MANAGER  | Username: admin123 | Password: Admin@123 | Salary: $20000
+ID: 2  | Name: Filo wael      | Role: DELIVERY | Username: filo    | Password: Filo@123  | Salary: $5000
+ID: 3  | Name: Mohamed Antr   | Role: DELIVERY | Username: antr    | Password: Antr@123  | Salary: $5000
+ID: 4  | Name: Sara Mohamed   | Role: CASHIER  | Username: sara    | Password: Sara@123  | Salary: $6000
+ID: 5  | Name: Noureen Ahmed  | Role: CASHIER  | Username: noni    | Password: Noni@2004 | Salary: $6000

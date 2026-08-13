@@ -2,40 +2,33 @@ package classes;
 
 import java.util.Date;
 
-/**
- * Represents an invoice issued for an order in the restaurant system.
- */
+
 public class Invoice {
     private int invoiceId;
-    private Order order; // ربط الفاتورة بالطلب
+    private Order order; 
     private double amount;
     private String paymentMethod;
     private Date paymentDate;
     private boolean paid;
 
-    // 1. Empty Constructor
     public Invoice() {
         this.paymentMethod = "CASH";
         this.paymentDate = new Date();
         this.paid = false;
     }
 
-    // 2. Constructor بسيط بالمبلغ
     public Invoice(double amount) {
         this(0, amount, "CASH", new Date());
     }
 
-    // 3. Constructor بالمبلغ وطريقة الدفع
     public Invoice(double amount, String paymentMethod) {
         this(0, amount, paymentMethod, new Date());
     }
 
-    // 4. Constructor بالـ ID والمبلغ
     public Invoice(int invoiceId, double amount) {
         this(invoiceId, amount, "CASH", new Date());
     }
 
-    // 5. Constructor كامل بالـ ID والبيانات
     public Invoice(int invoiceId, double amount, String paymentMethod, Date paymentDate) {
         setInvoiceId(invoiceId);
         setAmount(amount);
@@ -44,7 +37,6 @@ public class Invoice {
         this.paid = false;
     }
 
-    // --- Getters & Setters مع الـ Validations ---
 
     public int getInvoiceId() {
         return invoiceId;
@@ -104,9 +96,7 @@ public class Invoice {
         this.paid = paid;
     }
 
-    /**
-     * Processes payment for this invoice.
-     */
+
     public boolean processPayment() {
         if (this.paid) {
             return true;
@@ -119,9 +109,6 @@ public class Invoice {
         return true;
     }
 
-    /**
-     * Generates a printable text receipt for this invoice.
-     */
     public String printReceipt() {
         return String.format("--- INVOICE #%d ---\nAmount: $%.2f\nPayment Method: %s\nDate: %s\nStatus: %s\n",
                 invoiceId, amount, paymentMethod != null ? paymentMethod : "N/A",

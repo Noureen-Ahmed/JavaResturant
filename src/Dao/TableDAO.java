@@ -8,14 +8,13 @@ import java.util.List;
 
 public class TableDAO {
 
-    // 1. Add Table
     public boolean addTable(Table table) {
         String sql = "INSERT INTO restaurant_tables (table_number, capacity, is_available) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, table.getTableNumber());
-            pstmt.setInt(2, table.getCapacity()); // ⬅️ قراءة الـ capacity الديناميكية من الـ Object
+            pstmt.setInt(2, table.getCapacity()); 
             pstmt.setBoolean(3, table.isAvailable());
 
             return pstmt.executeUpdate() > 0;
@@ -25,7 +24,6 @@ public class TableDAO {
         return false;
     }
 
-    // 2. Get All Tables
     public List<Table> getAllTables() {
         List<Table> list = new ArrayList<>();
         String sql = "SELECT * FROM restaurant_tables";
@@ -42,7 +40,6 @@ public class TableDAO {
         return list;
     }
 
-    // 3. Get Table By Number
     public Table getTableByNumber(int tableNumber) {
         String sql = "SELECT * FROM restaurant_tables WHERE table_number = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -60,7 +57,6 @@ public class TableDAO {
         return null;
     }
 
-    // 4. Update Table Status
     public boolean updateTableStatus(Table table) {
         String sql = "UPDATE restaurant_tables SET is_available = ? WHERE table_number = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -76,26 +72,80 @@ public class TableDAO {
         return false;
     }
 
-    // 5. Delete Table
     public boolean deleteTable(int tableNumber) {
-        String sql = "DELETE FROM restaurant_tables WHERE table_number = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
 
-            pstmt.setInt(1, tableNumber);
-            return pstmt.executeUpdate() > 0;
+            try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM restaurant_tables WHERE table_number = ?")) {
+                pstmt.setInt(1, tableNumber);
+                if (pstmt.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            renumberTables(conn);
+            conn.commit();
+            return true;
         } catch (SQLException e) {
             System.err.println("Error deleting table: " + e.getMessage());
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ignored) {}
+            }
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); } catch (SQLException ignored) {}
+            }
         }
         return false;
     }
 
-    // Helper Method
+    private void renumberTables(Connection conn) throws SQLException {
+        List<Integer> oldNumbers = new ArrayList<>();
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT table_number FROM restaurant_tables ORDER BY table_number")) {
+            while (rs.next()) oldNumbers.add(rs.getInt(1));
+        }
+        if (oldNumbers.isEmpty()) return;
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+        }
+
+        int newNumber = 1;
+        for (int oldNumber : oldNumbers) {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE orders SET table_number = ? WHERE table_number = ?")) {
+                ps.setInt(1, -newNumber);
+                ps.setInt(2, oldNumber);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE reservations SET table_number = ? WHERE table_number = ?")) {
+                ps.setInt(1, -newNumber);
+                ps.setInt(2, oldNumber);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE restaurant_tables SET table_number = ? WHERE table_number = ?")) {
+                ps.setInt(1, newNumber);
+                ps.setInt(2, oldNumber);
+                ps.executeUpdate();
+            }
+            newNumber++;
+        }
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("UPDATE orders SET table_number = ABS(table_number)");
+            stmt.execute("UPDATE reservations SET table_number = ABS(table_number)");
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
+        }
+    }
+
     private Table mapResultSetToTable(ResultSet rs) throws SQLException {
         int tableNumber = rs.getInt("table_number");
-        int capacity = rs.getInt("capacity"); // ⬅️ قراءة سعة الطاولة من الداتا بيز
+        int capacity = rs.getInt("capacity");
         boolean available = rs.getBoolean("is_available");
 
-        return new Table(tableNumber, capacity, available); // ⬅️ التمرير للكونستراكتور الجديد
+        return new Table(tableNumber, capacity, available); 
     }
 }

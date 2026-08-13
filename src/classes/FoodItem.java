@@ -8,17 +8,14 @@ public class FoodItem {
     private double price;
     private String category;
 
-    // 1. Empty Constructor (ضروري للـ Frameworks والـ GUI)
     public FoodItem() {}
 
-    // 2. Constructor لإنشاء عنصر جديد من الـ GUI (قبل الحصول على ID من الداتا بيز)
     public FoodItem(String name, double price, String category) {
         setName(name);
         setPrice(price);
         setCategory(category);
     }
 
-    // 3. Constructor كامل بالـ ID (للداتا بيز والـ Manager)
     public FoodItem(int id, String name, double price, String category) {
         setId(id);
         setName(name);
@@ -26,13 +23,12 @@ public class FoodItem {
         setCategory(category);
     }
 
-    // Getters and Setters مع الـ Domain Validations
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        if (id < 0) { // يمنع القيم السالبة ويسمح بـ 0 للإنشاء الجديد
+        if (id < 0) { 
             throw new IllegalArgumentException("FoodItem ID cannot be negative.");
         }
         this.id = id;

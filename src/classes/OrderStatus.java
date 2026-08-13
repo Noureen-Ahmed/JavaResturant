@@ -1,8 +1,6 @@
 package classes;
 
-/**
- * OrderStatus enumeration representing the lifecycle states of an order.
- */
+
 public enum OrderStatus {
     PENDING,
     PREPARING,

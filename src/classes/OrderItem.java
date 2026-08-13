@@ -1,8 +1,5 @@
 package classes;
 
-/**
- * Represents an item entry within an order, containing a FoodItem and quantity.
- */
 public class OrderItem {
     private FoodItem item;
     private int quantity;
@@ -38,11 +35,7 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    /**
-     * Computes the subtotal for this order item.
-     * 
-     * @return item price multiplied by quantity
-     */
+
     public double getSubtotal() {
         return (item != null) ? item.getPrice() * quantity : 0.0;
     }

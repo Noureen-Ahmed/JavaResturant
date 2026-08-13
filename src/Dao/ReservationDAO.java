@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ReservationDAO {
 
-    // 1. Add Reservation
     public boolean addReservation(Reservation reservation) {
         String sql = "INSERT INTO reservations (customer_name, phone, reservation_date, table_number) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -39,7 +38,6 @@ public class ReservationDAO {
         return false;
     }
 
-    // 2. Get All Reservations
     public List<Reservation> getAllReservations() {
         List<Reservation> list = new ArrayList<>();
         String sql = "SELECT * FROM reservations";
@@ -56,7 +54,6 @@ public class ReservationDAO {
         return list;
     }
 
-    // 3. Get Reservation By ID
     public Reservation getReservationById(int id) {
         String sql = "SELECT * FROM reservations WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -74,21 +71,74 @@ public class ReservationDAO {
         return null;
     }
 
-    // 4. Delete Reservation
     public boolean deleteReservation(int id) {
-        String sql = "DELETE FROM reservations WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
 
-            pstmt.setInt(1, id);
-            return pstmt.executeUpdate() > 0;
+            try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM reservations WHERE id = ?")) {
+                pstmt.setInt(1, id);
+                if (pstmt.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            renumberReservations(conn);
+            conn.commit();
+            return true;
         } catch (SQLException e) {
             System.err.println("Error deleting reservation: " + e.getMessage());
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ignored) {}
+            }
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); } catch (SQLException ignored) {}
+            }
         }
         return false;
     }
 
-    // Helper Method
+    private void renumberReservations(Connection conn) throws SQLException {
+        List<Integer> oldIds = new ArrayList<>();
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT id FROM reservations ORDER BY id")) {
+            while (rs.next()) oldIds.add(rs.getInt(1));
+        }
+        if (oldIds.isEmpty()) return;
+
+        int newId = 1;
+        for (int oldId : oldIds) {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE reservations SET id = ? WHERE id = ?")) {
+                ps.setInt(1, newId);
+                ps.setInt(2, oldId);
+                ps.executeUpdate();
+            }
+            newId++;
+        }
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE reservations AUTO_INCREMENT = 1");
+        }
+    }
+
+    public boolean isPhoneExists(String phone, int excludeId) {
+        String sql = "SELECT 1 FROM reservations WHERE phone = ? AND id != ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, phone);
+            pstmt.setInt(2, excludeId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking reservation phone existence: " + e.getMessage());
+        }
+        return false;
+    }
+
     private Reservation mapResultSetToReservation(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String customerName = rs.getString("customer_name");

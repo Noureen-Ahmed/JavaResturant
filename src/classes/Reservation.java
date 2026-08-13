@@ -2,9 +2,7 @@ package classes;
 
 import java.util.Date;
 
-/**
- * Represents a table reservation made by a customer.
- */
+
 public class Reservation {
     private int id;
     private String customerName;
@@ -12,13 +10,11 @@ public class Reservation {
     private Date date;
     private int tableNumber;
 
-    // 1. Default Constructor
     public Reservation() {
         this.date = new Date();
         this.phone = "";
     }
 
-    // 2. Constructor لإنشاء حجز جديد من الـ GUI (بدون ID)
     public Reservation(String customerName, String phone, Date date, int tableNumber) {
         setCustomerName(customerName);
         setPhone(phone);
@@ -26,13 +22,11 @@ public class Reservation {
         setTableNumber(tableNumber);
     }
 
-    // 3. Constructor كامل بالـ ID (للداتا بيز)
     public Reservation(int id, String customerName, String phone, Date date, int tableNumber) {
         this(customerName, phone, date, tableNumber);
         setId(id);
     }
 
-    // --- Getters & Setters مع الـ Validations ---
 
     public int getId() {
         return id;

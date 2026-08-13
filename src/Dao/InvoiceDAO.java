@@ -9,7 +9,6 @@ import java.util.List;
 
 public class InvoiceDAO {
 
-    // 1. Create Invoice
     public boolean createInvoice(Invoice invoice) {
         String sql = "INSERT INTO invoices (order_id, amount, payment_method, payment_date, is_paid) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -46,7 +45,6 @@ public class InvoiceDAO {
         return false;
     }
 
-    // 2. Get Invoice By ID
     public Invoice getInvoiceById(int invoiceId) {
         String sql = "SELECT * FROM invoices WHERE invoice_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -64,7 +62,6 @@ public class InvoiceDAO {
         return null;
     }
 
-    // 3. Get Invoice By Order ID
     public Invoice getInvoiceByOrderId(int orderId) {
         String sql = "SELECT * FROM invoices WHERE order_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -82,7 +79,6 @@ public class InvoiceDAO {
         return null;
     }
 
-    // 4. Update Payment Status
     public boolean updatePaymentStatus(int invoiceId, boolean isPaid, String paymentMethod) {
         String sql = "UPDATE invoices SET is_paid = ?, payment_method = ?, payment_date = ? WHERE invoice_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -100,7 +96,6 @@ public class InvoiceDAO {
         return false;
     }
 
-    // Helper Method
     private Invoice mapResultSetToInvoice(ResultSet rs) throws SQLException {
         int invoiceId = rs.getInt("invoice_id");
         int orderId = rs.getInt("order_id");
@@ -112,7 +107,6 @@ public class InvoiceDAO {
         Invoice invoice = new Invoice(invoiceId, amount, paymentMethod, paymentDate);
         invoice.setPaid(isPaid);
 
-        // Fetch connected Order details
         if (orderId > 0) {
             OrderDAO orderDao = new OrderDAO();
             Order order = orderDao.getOrderById(orderId);

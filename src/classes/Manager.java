@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Represents a Manager in the Restaurant Management System.
- */
 public class Manager extends Employee {
 
     private final List<Employee> employeeRegistry;
     private final List<FoodItem> menuCatalog;
     private final List<Order> salesHistory;
 
-    // 1. Empty Constructor
     public Manager() {
         super();
         this.setRole(Role.MANAGER);
@@ -22,7 +18,6 @@ public class Manager extends Employee {
         this.salesHistory = new ArrayList<>();
     }
 
-    // 2. Constructor لإنشاء مدير جديد (من غير ID عشان الـ GUI)
     public Manager(String name, String phone, String username, String password) {
         super(name, phone, username, password, Role.MANAGER);
         this.employeeRegistry = new ArrayList<>();
@@ -30,7 +25,6 @@ public class Manager extends Employee {
         this.salesHistory = new ArrayList<>();
     }
 
-    // 3. Constructor بالـ ID (للداتا بيز)
     public Manager(int id, String name, String phone, String username, String password) {
         super(id, name, phone, username, password, Role.MANAGER);
         this.employeeRegistry = new ArrayList<>();
@@ -38,9 +32,8 @@ public class Manager extends Employee {
         this.salesHistory = new ArrayList<>();
     }
 
-    // 4. Constructor كامل بالقوائم جاهزة
     public Manager(int id, String name, String phone, String username, String password,
-                   List<Employee> employeeRegistry, List<FoodItem> menuCatalog, List<Order> salesHistory) {
+            List<Employee> employeeRegistry, List<FoodItem> menuCatalog, List<Order> salesHistory) {
         super(id, name, phone, username, password, Role.MANAGER);
         this.employeeRegistry = employeeRegistry != null ? employeeRegistry : new ArrayList<>();
         this.menuCatalog = menuCatalog != null ? menuCatalog : new ArrayList<>();
@@ -49,7 +42,8 @@ public class Manager extends Employee {
 
     private void checkAuthenticated() {
         if (!isLoggedIn()) {
-            throw new IllegalStateException("Authentication required: Manager must be logged in to perform privileged operations.");
+            throw new IllegalStateException(
+                    "Authentication required: Manager must be logged in to perform privileged operations.");
         }
     }
 
@@ -59,19 +53,18 @@ public class Manager extends Employee {
             throw new IllegalArgumentException("Employee to add cannot be null.");
         }
         for (Employee existing : employeeRegistry) {
-           if (existing != null) {
-            // فحص تكرار الـ ID
-            if (existing.getId() == emp.getId() && emp.getId() > 0) {
-                throw new IllegalArgumentException("Duplicate employee ID: " + emp.getId() + " already exists.");
+            if (existing != null) {
+                if (existing.getId() == emp.getId() && emp.getId() > 0) {
+                    throw new IllegalArgumentException("Duplicate employee ID: " + emp.getId() + " already exists.");
+                }
+
+                if (existing.getUsername() != null
+                        && emp.getUsername() != null
+                        && existing.getUsername().equalsIgnoreCase(emp.getUsername())) {
+                    throw new IllegalArgumentException(
+                            "Duplicate username: '" + emp.getUsername() + "' already exists.");
+                }
             }
-            
-            // فحص تكرار الـ Username مع الحماية من الـ null
-            if (existing.getUsername() != null 
-                    && emp.getUsername() != null 
-                    && existing.getUsername().equalsIgnoreCase(emp.getUsername())) {
-                throw new IllegalArgumentException("Duplicate username: '" + emp.getUsername() + "' already exists.");
-            }
-        }
         }
         employeeRegistry.add(emp);
     }
@@ -86,7 +79,8 @@ public class Manager extends Employee {
             }
         }
         if (toRemove == null) {
-            throw new IllegalArgumentException("Cannot delete: Employee with ID " + id + " does not exist in registry.");
+            throw new IllegalArgumentException(
+                    "Cannot delete: Employee with ID " + id + " does not exist in registry.");
         }
         employeeRegistry.remove(toRemove);
     }
@@ -104,7 +98,8 @@ public class Manager extends Employee {
             }
         }
         if (existingItem == null) {
-            throw new IllegalArgumentException("Cannot update: FoodItem with ID " + item.getId() + " was not found in the menu catalog.");
+            throw new IllegalArgumentException(
+                    "Cannot update: FoodItem with ID " + item.getId() + " was not found in the menu catalog.");
         }
         existingItem.setName(item.getName());
         existingItem.setPrice(item.getPrice());

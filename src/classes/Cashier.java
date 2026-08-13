@@ -3,9 +3,6 @@ package classes;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a Cashier in the Restaurant Management System.
- */
 public class Cashier extends Employee {
 
     private final List<Order> orderRegistry;
@@ -13,7 +10,6 @@ public class Cashier extends Employee {
     private final List<Table> tableRegistry;
     private int nextInvoiceId;
 
-    
     public Cashier() {
         super();
         this.setRole(Role.CASHIER);
@@ -23,7 +19,6 @@ public class Cashier extends Employee {
         this.nextInvoiceId = 1001;
     }
 
-   
     public Cashier(String name, String phone, String username, String password) {
         super(name, phone, username, password, Role.CASHIER);
         this.orderRegistry = new ArrayList<>();
@@ -31,7 +26,6 @@ public class Cashier extends Employee {
         this.tableRegistry = new ArrayList<>();
         this.nextInvoiceId = 1001;
     }
-
 
     public Cashier(int id, String name, String phone, String username, String password) {
         super(id, name, phone, username, password, Role.CASHIER);
@@ -41,9 +35,8 @@ public class Cashier extends Employee {
         this.nextInvoiceId = 1001;
     }
 
-    
     public Cashier(int id, String name, String phone, String username, String password,
-                   List<Order> orderRegistry, List<Reservation> reservationRegistry, List<Table> tableRegistry) {
+            List<Order> orderRegistry, List<Reservation> reservationRegistry, List<Table> tableRegistry) {
         super(id, name, phone, username, password, Role.CASHIER);
         this.orderRegistry = orderRegistry != null ? orderRegistry : new ArrayList<>();
         this.reservationRegistry = reservationRegistry != null ? reservationRegistry : new ArrayList<>();
@@ -53,7 +46,8 @@ public class Cashier extends Employee {
 
     private void checkAuthenticated() {
         if (!isLoggedIn()) {
-            throw new IllegalStateException("Authentication required: Cashier must be logged in to perform operations.");
+            throw new IllegalStateException(
+                    "Authentication required: Cashier must be logged in to perform operations.");
         }
     }
 
@@ -82,9 +76,10 @@ public class Cashier extends Employee {
         if (targetOrder == null) {
             throw new IllegalArgumentException("Order with ID " + orderId + " was not found.");
         }
-       if (targetOrder.getStatus() == OrderStatus.COMPLETED || targetOrder.getStatus() == OrderStatus.CANCELLED) {
-    throw new IllegalStateException("Cannot cancel order ID " + orderId + " because it is already " + targetOrder.getStatus());
-}
+        if (targetOrder.getStatus() == OrderStatus.COMPLETED || targetOrder.getStatus() == OrderStatus.CANCELLED) {
+            throw new IllegalStateException(
+                    "Cannot cancel order ID " + orderId + " because it is already " + targetOrder.getStatus());
+        }
         targetOrder.setStatus(OrderStatus.CANCELLED);
     }
 
@@ -111,17 +106,17 @@ public class Cashier extends Employee {
         reservationRegistry.add(res);
     }
 
-  public Invoice generateInvoice(Order order) {
-    checkAuthenticated();
-    if (order == null) {
-        throw new IllegalArgumentException("Order cannot be null.");
+    public Invoice generateInvoice(Order order) {
+        checkAuthenticated();
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null.");
+        }
+
+        double calculatedTotal = order.calculateTotal();
+
+        Invoice invoice = new Invoice(nextInvoiceId++, calculatedTotal);
+        return invoice;
     }
-
-    double calculatedTotal = order.calculateTotal(); 
-
-    Invoice invoice = new Invoice(nextInvoiceId++, calculatedTotal);
-    return invoice;
-}
 
     public void registerTable(Table table) {
         if (table != null) {

@@ -19,7 +19,6 @@ public class Menu {
             throw new IllegalArgumentException("Food item cannot be null");
         }
 
-        // Prevent duplicate food items with the same positive ID
         for (FoodItem existingItem : items) {
             if (existingItem != null && existingItem.getId() == item.getId() && item.getId() > 0) {
                 throw new IllegalArgumentException("A food item with this ID already exists");

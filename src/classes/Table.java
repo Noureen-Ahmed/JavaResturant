@@ -1,31 +1,25 @@
 package classes;
 
-/**
- * Represents a dining table in the restaurant.
- */
+
 public class Table {
     private int tableNumber;
     private int capacity;
     private boolean available;
 
-    // 1. Default Constructor
     public Table() {
         this.available = true;
     }
 
-    // 2. Constructor برقم الطاولة فقط
     public Table(int tableNumber) {
         this(tableNumber, 4, true);
     }
 
-    // 3. Constructor كامل
     public Table(int tableNumber, int capacity, boolean available) {
         setTableNumber(tableNumber);
         setCapacity(capacity);
         setAvailable(available);
     }
 
-    // --- Getters & Setters ---
 
     public int getTableNumber() {
         return tableNumber;

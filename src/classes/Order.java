@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Represents an order placed within the restaurant system.
- */
 public class Order {
     private int orderId;
     private Date orderDate;
@@ -21,7 +18,6 @@ public class Order {
     private double deliveryFee;
     private int tableNumber;
 
-    // 1. Default Constructor
     public Order() {
         this.items = new ArrayList<>();
         this.orderDate = new Date();
@@ -32,14 +28,12 @@ public class Order {
         this.tableNumber = 0;
     }
 
-    // 2. Constructor لإنشاء أوردر جديد من الشاشة (بدون ID)
     public Order(OrderType orderType, Employee cashier) {
         this();
         setOrderType(orderType);
         this.cashier = cashier;
     }
 
-    // 3. Constructor كامل بالـ ID (للداتا بيز)
     public Order(int orderId, Date orderDate, OrderType orderType, OrderStatus status) {
         this();
         setOrderId(orderId);
@@ -48,11 +42,6 @@ public class Order {
         setStatus(status);
     }
 
-    // --- Business Logic Methods ---
-
-    /**
-     * إضافة أكلة مع كميتها. لو الأكلة موجودة من قبل، بيزود الكمية بدل ما يكرر السطر.
-     */
     public void addItem(FoodItem item, int quantity) {
         if (item == null) {
             throw new IllegalArgumentException("Food item cannot be null.");
@@ -63,14 +52,12 @@ public class Order {
 
         for (OrderItem orderItem : items) {
             if (orderItem != null && orderItem.getItem() != null) {
-                // الفحص بالـ ID
                 if (orderItem.getItem().getId() > 0 && orderItem.getItem().getId() == item.getId()) {
                     orderItem.setQuantity(orderItem.getQuantity() + quantity);
                     calculateTotal();
                     return;
                 }
-                // الفحص بالاسم لو الـ ID لسة مش متسجل في الداتا بيز
-                if (orderItem.getItem().getName() != null && item.getName() != null 
+                if (orderItem.getItem().getName() != null && item.getName() != null
                         && orderItem.getItem().getName().equalsIgnoreCase(item.getName())) {
                     orderItem.setQuantity(orderItem.getQuantity() + quantity);
                     calculateTotal();
@@ -83,30 +70,21 @@ public class Order {
         calculateTotal();
     }
 
-    /**
-     * إضافة OrderItem مباشر
-     */
     public void addItem(OrderItem orderItem) {
         if (orderItem != null && orderItem.getItem() != null) {
             addItem(orderItem.getItem(), orderItem.getQuantity());
         }
     }
 
-    /**
-     * حذف أكلة بالكامل من الأوردر
-     */
     public void removeItem(FoodItem item) {
         if (item == null) {
             throw new IllegalArgumentException("Food item cannot be null.");
         }
 
-        boolean removed = items.removeIf(orderItem -> 
-            orderItem != null && orderItem.getItem() != null && (
-                (orderItem.getItem().getId() > 0 && orderItem.getItem().getId() == item.getId()) ||
-                (orderItem.getItem().getName() != null && item.getName() != null 
-                    && orderItem.getItem().getName().equalsIgnoreCase(item.getName()))
-            )
-        );
+        boolean removed = items.removeIf(orderItem -> orderItem != null && orderItem.getItem() != null
+                && ((orderItem.getItem().getId() > 0 && orderItem.getItem().getId() == item.getId()) ||
+                        (orderItem.getItem().getName() != null && item.getName() != null
+                                && orderItem.getItem().getName().equalsIgnoreCase(item.getName()))));
 
         if (!removed) {
             throw new IllegalArgumentException("Food item is not in this order.");
@@ -115,9 +93,6 @@ public class Order {
         calculateTotal();
     }
 
-    /**
-     * حساب إجمالي الطلب بناءً على العناصر ودليفري الفاتورة
-     */
     public double calculateTotal() {
         double sum = 0.0;
         if (items != null) {
@@ -133,8 +108,6 @@ public class Order {
         this.totalAmount = sum;
         return this.totalAmount;
     }
-
-    // --- Getters & Setters ---
 
     public int getOrderId() {
         return orderId;

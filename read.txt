@@ -4,3 +4,4 @@ ID: 2  | Name: Filo wael      | Role: DELIVERY | Username: filo    | Password: F
 ID: 3  | Name: Mohamed Antr   | Role: DELIVERY | Username: antr    | Password: Antr@123  | Salary: $5000
 ID: 4  | Name: Sara Mohamed   | Role: CASHIER  | Username: sara    | Password: Sara@123  | Salary: $6000
 ID: 5  | Name: Noureen Ahmed  | Role: CASHIER  | Username: noni    | Password: Noni@2004 | Salary: $6000
+ java -cp "bin;lib\mysql-connector-j-8.3.0.jar" gui.MainFrame -> run in terminal for app

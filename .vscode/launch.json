@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run Restaurant",
+            "request": "launch",
+            "mainClass": "gui.MainFrame",
+            "cwd": "${workspaceFolder}",
+            "classPaths": [
+                "${workspaceFolder}/bin"
+            ]
+        }
+    ]
+}
